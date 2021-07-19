@@ -1,0 +1,21 @@
+{
+    "personaje": {
+        "nombre": "q",
+        "password": "q",
+        "vida": 5,
+        "escudo": 10,
+        "fuerza": 10
+    },
+    "bolsa": {
+        "item_1": "vacio",
+        "item_2": "vacio",
+        "item_3": "vacio",
+        "item_4": "vacio"
+    },
+    "ubicacion_personaje": {
+        "posicion": "castillo_room1"
+    },
+    "posicion_puertas": {
+        "puerta_aguila": "abierta"
+    }
+}
