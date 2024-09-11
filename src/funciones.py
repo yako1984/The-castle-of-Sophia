@@ -75,7 +75,13 @@ def printEstado (atributos_personaje):
 	input('\nPulsa cualquier tecla par cotinua...')
 
 #Comprueba si tienes la llave en la bolsa (inventario). Si la tienes abre la puerta--------------------------------
+#------------------------------------------------------------------------------------------------------------------
+#EJEMPLO FUNCIONAMIENTO:
 
+#funciones.abrir_puerta('puerta_aguila', 'llave_aguila')
+	#if estado.posicion_puertas['puerta_aguila'] == 'abierta':
+            #funciones.puntosCardinales(opcion, 'norteSi', room1, 'surNo', room2, 'esteNo', 0, 'oesteNo', 0)
+#------------------------------------------------------------------------------------------------------------------
 def abrir_puerta(puerta, llave):
 	bolsa = modulo_bolsa.bolsa.values()		#Ejemplo abrir_puerta('nombre_puerta', 'nombre_llave')
 	

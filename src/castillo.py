@@ -6,6 +6,7 @@ from . import funciones, estado, ia_enemigos
 # ENTRADA --------------------------------------------------------------------------
 def entrada():
     while True:
+        estado.ubicacion_personaje['posicion'] = 'castillo_entrada'
 
         funciones.borrarPantalla()
         #funciones.leer('src/ascii/lobo.dra', 'azul', True, True)
@@ -19,10 +20,10 @@ def entrada():
 
         opcion = input("¿norte o sur? ")
         
-        funciones.abrir_puerta('puerta_aguila', 'llave_aguila')
         
-        if estado.posicion_puertas['puerta_aguila'] == 'abierta':
+        if opcion == 'norte': 
             funciones.puntosCardinales(opcion, 'norteSi', room1, 'surNo', room2, 'esteNo', 0, 'oesteNo', 0)
+    
         else:
             funciones.puntosCardinales(opcion, 'norteNo', room1, 'surNo', room2, 'esteNo', 0, 'oesteNo', 0)
         
@@ -31,9 +32,7 @@ def entrada():
 
 
 def room1():
-    estado.ubicacion_personaje['posicion'] = 'castillo_room1'
-    #estado.guardar_estado('ubicacion') #Ver como hacer un sistema de autoguardado.
-    estado.guardar_estado('todos') 
+    estado.ubicacion_personaje['posicion'] = 'castillo_room1' 
 
     while True:
         funciones.borrarPantalla()
@@ -85,7 +84,7 @@ def room2():
 
         if opcion == 'coger crucifijo' or opcion == 'coger el crucifijo':
             if objeto == True:
-                funciones.crearObjeto('un Crucifijo', 'escudo', 12)
+                funciones.crearObjetoHabilidad('un Crucifijo', 'escudo', 12)
                 objeto = False
 
             elif objeto == False:
@@ -152,8 +151,6 @@ personaje = estado.personaje
 def room4():
     estado.ubicacion_personaje['posicion'] = 'castillo_room4'
 
-    # Crea un enemigo de forma aleatoria
-
     funciones.borrarPantalla()
 
     while True:
@@ -161,22 +158,17 @@ def room4():
         print('')
         print("Algo te espera en el norte")
 
-        opcion = input("¿ir norte o sur? ")
+        opcion = input("¿ir norte o este? ")
 
-        if opcion == "abrir el cofre":
-            monedas = random.randint(2, 6)
-            print("Abres el cofre y consigues...", monedas, "monedas!")
-            personaje["escudo"] += monedas
-
-            opcion = input("¿norte o sur? ")
-            if opcion == "norte":
-                FINALBOSS()
-            else:
-                room2()
-        elif opcion == "norte":
-            FINALBOSS()
-        else:
+        if opcion == "norte":
             room2()
 
-# Aviso! para poder ejecutar este codigo independiente del program principal tienes que tener el JSON partida
-# con todos los campo cubiertos si no da error y descomentar las dos lineas de abajo.
+        elif opcion == "este":
+            room3()
+
+        else:
+            print('Opción no válida!')
+            time.sleep(1)
+            funciones.borrarPantalla()
+            room4()
+
