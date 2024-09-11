@@ -13,10 +13,24 @@ init(autoreset=True) #Inicializador colorama - Atencion: Para usar colorama hay 
 
 # FUNCIONES AÑADIDAS ###################   Notas: Hacer funcion GAME OVER, para que se pueda volver a empezar o continuar
 
-def posicion_jugador():
+def posicion_jugador(): #Hay que crear todas las habiataciones del juego aqui para poder enviar al jugador a la posicion guardada.
+    
+#-------------------Ubicciones del castillo------------------------------------------------
 
-    if estado.ubicacion_personaje['posicion'] == 'castillo_room1':
+    if estado.ubicacion_personaje['posicion'] == 'castillo_entrada':
+        castillo.entrada()
+    elif estado.ubicacion_personaje['posicion'] == 'castillo_room1':    
         castillo.room1()
+    elif estado.ubicacion_personaje['posicion'] == 'castillo_room2':
+        castillo.room2()
+    elif estado.ubicacion_personaje['posicion'] == 'castillo_room3':
+        castillo.room3()
+    elif estado.ubicacion_personaje['posicion'] == 'castillo_room4':
+        castillo.room4()
+
+#-------------------Ubicaciones del castillo------------------------------------------------
+
+
 
 ############ FUNCIONES AÑADIDAS ###################
 
@@ -82,10 +96,10 @@ def inicio():
 
         respuesta = input("(si/no): ")
 
-        if respuesta == "si":
+        if respuesta == "si" or respuesta == "s":
             castillo.entrada()
 
-        elif respuesta == 'no':
+        elif respuesta == 'no' or respuesta == "n":
             funciones.borrarPantalla()
             print(" Puede que sea una buena idea.")
             print(" LIMPIATE EL CULO!!")
