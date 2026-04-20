@@ -1,121 +1,78 @@
 import sys
 import time
-from src import menus
-from src import funciones
-from src import estado
-from src import castillo
+from src import menus, funciones, estado, castillo, pueblo, bosque, cementerio
 from colorama import init, Fore, Back, Style
 
 personaje = estado.personaje
 
-init(autoreset=True) #Inicializador colorama - Atencion: Para usar colorama hay que poner esta linea al inicio!
+init(autoreset=True) 
 
-
-# FUNCIONES AÑADIDAS ###################   Notas: Hacer funcion GAME OVER, para que se pueda volver a empezar o continuar
-
-def posicion_jugador(): #Hay que crear todas las habiataciones del juego aqui para poder enviar al jugador a la posicion guardada.
+def game_loop():
+    """Bucle principal que gestiona el flujo del juego sin recursividad."""
+    proxima_escena = estado.ubicacion_personaje.get('posicion', 'pueblo_plaza')
     
-#-------------------Ubicciones del castillo------------------------------------------------
+    if not proxima_escena:
+        proxima_escena = 'pueblo_plaza'
 
-    if estado.ubicacion_personaje['posicion'] == 'castillo_entrada':
-        castillo.entrada()
-    elif estado.ubicacion_personaje['posicion'] == 'castillo_room1':    
-        castillo.room1()
-    elif estado.ubicacion_personaje['posicion'] == 'castillo_room2':
-        castillo.room2()
-    elif estado.ubicacion_personaje['posicion'] == 'castillo_room3':
-        castillo.room3()
-    elif estado.ubicacion_personaje['posicion'] == 'castillo_room4':
-        castillo.room4()
+    while True:
+        # Mapeo de nombres de escena a funciones
+        escenas = {
+            'pueblo_plaza': pueblo.plaza,
+            'pueblo_taberna': pueblo.taberna,
+            'pueblo_herreria': pueblo.herreria,
+            'pueblo_sur': pueblo.pueblo_sur,
+            'bosque_entrada': bosque.bosque_entrada,
+            'bosque_claro': bosque.claro,
+            'bosque_cueva': bosque.cueva,
+            'cementerio_entrada': cementerio.entrada_cementerio,
+            'cementerio_mausoleo': cementerio.mausoleo,
+            'cementerio_capilla': cementerio.capilla,
+            'inicio_original': mostrar_introduccion_castillo,
+            'castillo_entrada': castillo.entrada,
+            'castillo_room1': castillo.room1,
+            'castillo_room2': castillo.room2,
+        }
 
-#-------------------Ubicaciones del castillo------------------------------------------------
-
-
-
-############ FUNCIONES AÑADIDAS ###################
-
-def Molyneux():
-    funciones.borrarPantalla()
-
-    vida_enemigo = 50
-    fuerza_enemigo = 20
-
-    print("Hola! Soy Moli... Muli... Mo... El tito Peter!")
-    print("Me vas a permitir matarte...")
-    print("¡Tiene", vida_enemigo, "puntos de vida!")
-    while vida_enemigo > 0:
-        print("")
-        accion = input("atacar o escapar: ")
-        if accion == "atacar":
-            vida_enemigo = vida_enemigo - personaje["fuerza"]
-            if vida_enemigo <= 0:
-                print("Ganaste!!! el final ya esta aqui!!!")
-                time.sleep(5)
-                funciones.borrarPantalla()
-                #TheEnd()
-                return False
-            else:
-                print("A Peter le quedan", vida_enemigo, "puntos de vida")
-                print("La Peter ataca!!!!")
-                if personaje["escudo"] <= 0:
-                    personaje["vida"] -= fuerza_enemigo
-                    if personaje["vida"] <= 0:
-                        print("GAME OVER")
-                        sys.exit()
-                else:
-                    personaje["escudo"] -= fuerza_enemigo
-
-            funciones.printEstado(personaje)
-
-        elif accion != "atacar" or accion != "escapar":
-            print('Opcion incorrecta! ')
-
+        if proxima_escena in escenas:
+            resultado = escenas[proxima_escena]()
+            if resultado:
+                proxima_escena = resultado
+        elif proxima_escena == 'fuera_puente':
+            print("\nDecides no entrar. El frío de la noche te abraza mientras te alejas...")
+            print("GAME OVER")
+            break
         else:
-            print("Escapaste")
-            return False
+            print(f"Error: La escena '{proxima_escena}' no está definida.")
+            break
 
-    return
+def mostrar_introduccion_castillo():
+    """Esta es la escena original del puente, ahora llamada desde el cementerio."""
+    funciones.borrarPantalla()
+    print('')
+    print(" Al fin llegas frente a las puertas del Castillo de Sophia.")
+    print(" Una fuerza oscura y demoníaca emana de los muros de piedra.")
+    print(" Se escuchan gritos sordos en el interior...")
+    print('')
+    print(f"¿Quieres cruzar el puente del castillo, {personaje['nombre']}?")
+    print('')
+
+    respuesta = input("(si/no/opciones): ").lower()
+
+    if respuesta in ["si", "s"]:
+        return 'castillo_entrada'
+    elif respuesta in ["no", "n"]:
+        return 'fuera_puente'
+    elif respuesta == 'opciones':
+        menus.opciones()
+        return 'inicio_original'
+    else:
+        print('Opcion no valida!')
+        time.sleep(1)
+        return 'inicio_original'
 
 def inicio():
     menus.principal()    
-    
-    posicion_jugador()
-    
-# PUENTE CASTILLO -------------------------------------------------------------------------------------------------
-    
-    while True:
+    game_loop()
 
-        print('')
-        print(" Algo te atrajo hasta aqui. Una fuerza oscura y demoniaca.")
-        print(" En frente a ti se alza un castillo con una gran puerta de madera, que data de 1800.")
-        print(" Se escuchan gritos sordos...")
-        print(" Ser cobarde no es una opción")
-        print('')
-        print("¿Quieres cruzar el puente del castillo", personaje["nombre"], "?")
-        print('')
-
-        respuesta = input("(si/no): ")
-
-        if respuesta == "si" or respuesta == "s":
-            castillo.entrada()
-
-        elif respuesta == 'no' or respuesta == "n":
-            funciones.borrarPantalla()
-            print(" Puede que sea una buena idea.")
-            print(" LIMPIATE EL CULO!!")
-            print('')
-            print(" GAME OVER")
-            time.sleep(4)
-            sys.exit()
-
-        elif respuesta == 'opciones':
-            menus.opciones()
-
-        else:
-            print('Opcion no valida!')
-            time.sleep(1)
-
-###################### Inicio ####################################
-
-
-inicio()
+if __name__ == "__main__":
+    inicio()

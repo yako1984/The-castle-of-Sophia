@@ -58,7 +58,7 @@ def ver_bolsa():
 			eliminar_bolsa(obj_eliminar)
 
 		elif opcion == '2':
-			menus.opciones() 
+			return 
 
 		else:
 			print(Fore.RED + 'Esa opción no es válida.')

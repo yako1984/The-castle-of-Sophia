@@ -83,6 +83,9 @@ def partidaNueva():
 #GUARDAR_PARTIDA-------------------------------------------------------------------------        
 
 def guardar_estado(opcion):
+	# Asegurar que la carpeta de saves existe
+	if not path.exists('src/saves'):
+		os.makedirs('src/saves')
 
 	if opcion == 'personaje':
 		dic_estado['personaje'] = personaje
@@ -98,11 +101,10 @@ def guardar_estado(opcion):
 		dic_estado['bolsa'] = bolsa
 		dic_estado['ubicacion_personaje'] = ubicacion_personaje
 		dic_estado['posicion_puertas'] = posicion_puertas
-		print('\nPartida creada/guardada con éxito! :)')
-
-		time.sleep(2)
+		print('\n¡Partida guardada con éxito! :)')
+		time.sleep(1)
 	
-	nombreUsuario = personaje['nombre']
+	nombreUsuario = personaje.get('nombre', 'jugador')
 	
 	with open('src/saves/'+nombreUsuario+'Save.json', 'w') as file:
 		json.dump(dic_estado, file, indent=4)
@@ -110,28 +112,18 @@ def guardar_estado(opcion):
 #CARGAR_PARTIDA-------------------------------------------------------------------------
 
 def cargar_estado():
-	nombreUsuario = input("¿Como te llamas?: ")
-
+	nombreUsuario = input("¿Cómo te llamas?: ")
 	nombrePartida = (nombreUsuario+'Save.json')
 		
 	if path.exists('src/saves/'+nombrePartida):
-		
-		with open('src/saves/'+nombreUsuario+'Save.json') as file:
-			dic_estado = json.load(file)
+		with open('src/saves/'+nombrePartida) as file:
+			datos = json.load(file)
 
-#CARGAMOS EL ARCHIVO JSON PREVIAMENTE GUARDADO EN EL DICCIONARIO dic_estado A LOS OTROS DICCIONARIOS 
-#personaje, bolsa etc.
- 		
-		for clave, valor in dic_estado['personaje'].items():
-			personaje[clave] = valor
-		
-		for clave, valor in dic_estado['bolsa'].items():
-			bolsa[clave] = valor
-		
-		for clave, valor in dic_estado['posicion_puertas'].items():
-			posicion_puertas[clave] = valor
-		
-		ubicacion_personaje['posicion'] = dic_estado['ubicacion_personaje']['posicion']
+		# Usar update para cargar datos de forma más eficiente
+		if 'personaje' in datos: personaje.update(datos['personaje'])
+		if 'bolsa' in datos: bolsa.update(datos['bolsa'])
+		if 'posicion_puertas' in datos: posicion_puertas.update(datos['posicion_puertas'])
+		if 'ubicacion_personaje' in datos: ubicacion_personaje.update(datos['ubicacion_personaje'])
 
 #-----------------FIN DE LA CARGA-------------------------------------------------------
 

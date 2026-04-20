@@ -8,34 +8,38 @@ personaje = estado.personaje
 
 
 def creaEnemigo(vida, fuerza, nombreEnemigo):
-    print('¡Aparecio un '+ nombreEnemigo +' de ultratumba!')
-    print("¡Tiene", vida, "puntos de vida!")
+    print(f'¡Apareció un {nombreEnemigo} de ultratumba!')
+    print(f"¡Tiene {vida} puntos de vida!")
     while vida > 0:
         print("")
-        accion = input("atacar o escapar: ")
+        accion = input("atacar o escapar: ").lower()
         if accion == "atacar":
             vida = vida - personaje["fuerza"]
             if vida <= 0:
-                print('')
-                print("Ganaste!!!!")
-                print("Tu premio son 2 monedas")
+                print(f'\n¡Has derrotado al {nombreEnemigo}!')
+                print("Tu premio son 2 monedas (escudo +2)")
                 personaje["escudo"] += 2
+                time.sleep(1)
             else:
-                print('Al '+ nombreEnemigo +' le quedan ', vida, ' puntos de vida')
-                print('')
-                print('El '+ nombreEnemigo +' ataca!!!!')
+                print(f'Al {nombreEnemigo} le quedan {vida} puntos de vida')
+                print(f'\n¡El {nombreEnemigo} ataca!')
                 if personaje["escudo"] <= 0:
                     personaje["vida"] -= fuerza
                     if personaje["vida"] <= 0:
-                        print("GAME OVER")
+                        print("\n" + "*"*20)
+                        print("      GAME OVER")
+                        print("*"*20)
                         sys.exit()
                 else:
                     personaje["escudo"] -= fuerza
 
             funciones.printEstado(personaje)
-        else:
-            print("Escapaste")
+        elif accion == "escapar":
+            print("\nEscapas por los pelos...")
+            time.sleep(1)
             return
+        else:
+            print("No entiendo esa acción.")
 
 
 def creaEnemigoAleatorio():

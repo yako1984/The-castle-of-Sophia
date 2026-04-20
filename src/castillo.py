@@ -1,132 +1,100 @@
 import random
 import time
 import sys
-from . import funciones, estado, ia_enemigos
+from colorama import Fore
+from . import funciones, estado, ia_enemigos, menus
 
-# ENTRADA --------------------------------------------------------------------------
 def entrada():
-    while True:
-        estado.ubicacion_personaje['posicion'] = 'castillo_entrada'
+    estado.ubicacion_personaje['posicion'] = 'castillo_entrada'
+    funciones.borrarPantalla()
+    print(Fore.RED + '--- ENTRADA DEL CASTILLO ---')
+    print('')
+    print(Fore.GREEN + " Una niebla intensa dificulta la visibilidad.")
+    print(Fore.GREEN + " Hay una gran puerta de madera al norte")
+    print(Fore.GREEN + " Al sur vuelves a cruzar el puente")
+    print('')
 
-        funciones.borrarPantalla()
-        #funciones.leer('src/ascii/lobo.dra', 'azul', True, True)
-
-        print('Entrada')
-        print('')
-        print(" Una niebla intensa dificulta la visibilidad.")
-        print(" Hay una gran puerta de madera al norte")
-        print(" Al sur vuelves a cruzar el puente")
-        print('')
-
-        opcion = input("¿norte o sur? ")
-        
-        
-        if opcion == 'norte': 
-            funciones.puntosCardinales(opcion, 'norteSi', room1, 'surNo', room2, 'esteNo', 0, 'oesteNo', 0)
+    opcion = input(Fore.YELLOW + "¿norte o sur? ")
     
-        else:
-            funciones.puntosCardinales(opcion, 'norteNo', room1, 'surNo', room2, 'esteNo', 0, 'oesteNo', 0)
-        
+    if opcion == 'norte': 
+        return 'castillo_room1'
+    elif opcion == 'sur':
+        return 'fuera_puente'
+    else:
+        print(Fore.RED + 'No puedes ir por ahí.')
+        time.sleep(1)
+        return 'castillo_entrada'
 
 # ROOM 1 --------------------------------------------------------------------------
 
-
 def room1():
     estado.ubicacion_personaje['posicion'] = 'castillo_room1' 
+    funciones.borrarPantalla()
+    print(Fore.RED + '--- HABITACIÓN 1 ---')
+    print('')
+    print(Fore.GREEN + " En la habitación hay un retrato de una mujer con una vestimenta de otra época.")
+    print(Fore.GREEN + " También se pueden ver dos puertas. Una en el oeste y la otra al este.")
+    print('')
 
-    while True:
-        funciones.borrarPantalla()
-        print('Habitación 1')
+    opcion = input(Fore.YELLOW + 'mirar cuadro, ir oeste, este o sur?: ')
+
+    if opcion in ['mirar', 'mirar cuadro', 'ver']:
         print('')
-        print(" En la habitación hay un retrato de una mujer con una vestimenta de otra epoca.")
-        print(" Tambien se pueden ver dos puertas. Una en el oeste y la otra al este")
-        print('')
-
-        opcion = input('mirar cuadro, ir oeste, este o sur?: ')
-
-        if opcion == 'mirar' or opcion == 'mirar cuadro' or opcion == 'ver':
-            print('')
-            print(" Sus ojos tienen un brillo aterrador, parecieran estar mirandote...")
-            print(
-                ' Hay una inscripción debajo en la que puede leerse "Sofia Lumper - 1816".')
-            input('\npulsa cualquier tecla para salir...')
-        elif opcion == "oeste":
-            room2()
-        elif opcion == "este":
-            room3()
-        elif opcion == 'sur':
-            entrada()
-        elif opcion == 'opciones':
-            funciones.opciones()
-        else:
-            print('Opción no válida!')
-            time.sleep(1)
+        print(Fore.GREEN + " Sus ojos tienen un brillo aterrador, parecieran estar mirándote...")
+        print(Fore.GREEN + ' Hay una inscripción debajo en la que puede leerse "Sofia Lumper - 1816".')
+        input(Fore.YELLOW + '\nPulsa cualquier tecla para salir...')
+        return 'castillo_room1'
+    elif opcion == "oeste":
+        return 'castillo_room2'
+    elif opcion == "este":
+        return 'castillo_room3'
+    elif opcion == 'sur':
+        return 'castillo_entrada'
+    elif opcion == 'opciones':
+        menus.opciones()
+        return 'castillo_room1'
+    else:
+        print(Fore.RED + '¡Opción no válida!')
+        time.sleep(1)
+        return 'castillo_room1'
 
 # ROOM 2 --------------------------------------------------------------------------
 
-
 def room2():
     estado.ubicacion_personaje['posicion'] = 'castillo_room2'
-
     ia_enemigos.creaEnemigoAleatorio()
-    objeto = True
+    objeto_crucifijo = True # Esto debería estar en el estado global realmente
 
-    while True:
+    funciones.borrarPantalla()
+    print(Fore.RED + '--- HABITACIÓN 2 ---')
+    print('')
+    print(Fore.GREEN + ' Estás en una habitación lúgubre con una puerta al norte, otra al este y una ventana.')
+    print(Fore.GREEN + ' Hay un cadáver en el suelo con un crucifijo clavado en el pecho.')
+    print('')
+
+    opcion = input(Fore.YELLOW + 'mirar ventana, coger crucifijo, este, norte?: ')
+
+    if 'crucifijo' in opcion:
+        funciones.crearObjetoHabilidad('un Crucifijo', 'escudo', 12)
+        return 'castillo_room2'
+    elif 'ventana' in opcion:
         funciones.borrarPantalla()
-        print('Habitación 2')
-        print('')
-        print(' Estas en una habitacion lugrube en la que se puede ver una puerta al norte, otra al este y una ventana.')
-        print(' También hay un cadaver en suelo desnudo, tiene un crucifijo clavado en el pecho.')
-        print(' El crucifijo puede verse destellando en la habitación')
-        print('')
-
-        opcion = input('mirar ventana, coger crucifijo, este, norte?: ')
-
-        if opcion == 'coger crucifijo' or opcion == 'coger el crucifijo':
-            if objeto == True:
-                funciones.crearObjetoHabilidad('un Crucifijo', 'escudo', 12)
-                objeto = False
-
-            elif objeto == False:
-                print('Ya tines el crucifijo!')
-                time.sleep(1)
-
-        elif opcion == 'mirar ventana' or opcion == 'mirar la ventana':
-
-            while True:  # Mirar Ventana
-                funciones.borrarPantalla()
-                print(
-                    ' Se ve un jardin, y en medio una mujer de aspecto palido. Tiene un cierto parecido al retrato de "Sophia"...')
-                print('')
-
-                opcion = input(
-                    'Que quieres hacer: volver o saltar por la ventana?: ')
-
-                if opcion == 'saltar por la ventana' or opcion == 'saltar ventana' or opcion == 'saltar':
-                    print('')
-                    print('Has caido al vacio!!')
-                    time.sleep(2)
-                    print('La mujer se hacerca a ti. La vision se vuelve borrosa')
-                    time.sleep(2)
-                    print('Ya no puedes pensar nada mas que en sangre...')
-                    time.sleep(2)
-                    print('')
-                    print('GAME OVER')
-                    sys.exit()
-                elif opcion == 'volver' or opcion == 'atras':
-                    room2()
-
-                else:
-                    print('Opción no válida!')
-                    time.sleep(1)
-
-        elif opcion == 'norte':
-            room4()
-        elif opcion == 'este':
-            room1()
-        else:
-            print('Opción no válida!')
-            time.sleep(1)
+        print(Fore.GREEN + ' Se ve un jardín y una mujer pálida que se parece a "Sophia"...')
+        opcion_v = input(Fore.YELLOW + '¿Volver o saltar?: ')
+        if 'saltar' in opcion_v:
+            print(Fore.RED + '\n¡Has caído al vacío!')
+            time.sleep(2)
+            print(Fore.RED + 'GAME OVER')
+            sys.exit()
+        return 'castillo_room2'
+    elif opcion == 'norte':
+        return 'castillo_room4'
+    elif opcion == 'este':
+        return 'castillo_room1'
+    else:
+        print(Fore.RED + '¡Opción no válida!')
+        time.sleep(1)
+        return 'castillo_room2'
 
 # ROOM 3 --------------------------------------------------------------------------
 
@@ -135,12 +103,12 @@ def room3():
     estado.ubicacion_personaje['posicion'] = 'castillo_room3'
 
     funciones.borrarPantalla()
-    print('Habitación 3')
+    print(Fore.RED + '--- HABITACIÓN 3 ---')
     print('')
-    print("Esta habitación es un cristo!")
-    direc = input("¿oeste? ")
+    print(Fore.GREEN + "Esta habitación es un cristo!")
+    direc = input(Fore.YELLOW + "¿oeste? ")
     if direc == "oeste":
-        room1()
+        return 'castillo_room1'
 
 # ROOM 4 --------------------------------------------------------------------------
 
@@ -154,21 +122,22 @@ def room4():
     funciones.borrarPantalla()
 
     while True:
-        print('Habitación 4')
+        print(Fore.RED + '--- HABITACIÓN 4 ---')
         print('')
-        print("Algo te espera en el norte")
+        print(Fore.GREEN + "Algo te espera en el norte")
 
-        opcion = input("¿ir norte o este? ")
+        opcion = input(Fore.YELLOW + "¿ir norte o este? ")
 
         if opcion == "norte":
-            room2()
+            return 'castillo_room2'
 
         elif opcion == "este":
-            room3()
+            return 'castillo_room3'
 
         else:
-            print('Opción no válida!')
+            print(Fore.RED + 'Opción no válida!')
             time.sleep(1)
             funciones.borrarPantalla()
-            room4()
+            # Quitamos la recursividad aquí también
+            return 'castillo_room4'
 

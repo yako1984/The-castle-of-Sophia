@@ -45,30 +45,30 @@ def principal():
 
 def opciones():
 	
-	funciones.borrarPantalla()
+	while True:
+		funciones.borrarPantalla()
 
-	print(Fore.RED + '+--------+ MENU OPCIONES +----------+')
-	print(Fore.GREEN + '[1] Ver y/o editar el inventario')
-	print(Fore.GREEN + '[2] Guardar la partida')
-	print(Fore.GREEN + '[3] Ver el estado del personaje')
-	print(Fore.GREEN + '[4] Salir')	
-	print(Fore.RED +'+-----------------------------------+')
-	
-	opcion_personaje = input (Fore.YELLOW + 'Opción: ')
-
-	if opcion_personaje == '1':
-		modulo_bolsa.ver_bolsa()
-	
-	elif opcion_personaje == '2':
-		estado.guardar_estado('todos')
-	
-	elif opcion_personaje == '3':
-		funciones.printEstado(estado.personaje)
-
-	elif opcion_personaje == '4':
-		return
+		print(Fore.RED + '+--------+ MENU OPCIONES +----------+')
+		print(Fore.GREEN + '[1] Ver y/o editar el inventario')
+		print(Fore.GREEN + '[2] Guardar la partida')
+		print(Fore.GREEN + '[3] Ver el estado del personaje')
+		print(Fore.GREEN + '[4] Salir')	
+		print(Fore.RED +'+-----------------------------------+')
 		
-	else:
-		print ('Esa opción no esta registrada.')
-		time.sleep(0.500)
-		opciones()
+		opcion_personaje = input (Fore.YELLOW + 'Opción: ')
+
+		if opcion_personaje == '1':
+			modulo_bolsa.ver_bolsa()
+		
+		elif opcion_personaje == '2':
+			estado.guardar_estado('todos')
+		
+		elif opcion_personaje == '3':
+			funciones.printEstado(estado.personaje)
+
+		elif opcion_personaje == '4':
+			return
+			
+		else:
+			print ('Esa opción no esta registrada.')
+			time.sleep(0.500)
